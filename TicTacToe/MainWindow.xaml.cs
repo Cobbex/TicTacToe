@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Windows.Input;
 
 namespace TicTacToe
 {
@@ -57,6 +57,7 @@ namespace TicTacToe
             {2,4,6}// Diagonal - Up Left or Down Right
         };
 
+        // Main thread
         public MainWindow()
         {
             InitializeComponent();
@@ -66,9 +67,12 @@ namespace TicTacToe
 
             // Setting events for all buttons & some other stuff
             for (int i = 0; i < 9; i++)
+            {
                 buttons[i].Click += new RoutedEventHandler(ClickHandler);
+            }
 
             pcOption.Checked += new RoutedEventHandler(AIHandler);
+            playersOption.Click += new RoutedEventHandler(MultiplayerHandler);
 
             Start(); // Start game! Reset stuff etc.
         }
@@ -78,18 +82,6 @@ namespace TicTacToe
         {
             Console.WriteLine("Reset occured");
 
-            if (computerOpponent)
-            {
-                player1Turn = true; // The PC never starts
-                turnLbl.Content = player1Turn ? "You" : "PC"; // Whose turn is it?
-            }
-            else
-            {
-                player1Turn = !player1Turn; // Same player won't start
-                turnLbl.Content = player1Turn ? "Player 1" : "Player 2"; // Whose turn is it?
-            }
-
-
             // Reset all buttons
             for (int i = 0; i < 9; i++)
             {
@@ -98,6 +90,18 @@ namespace TicTacToe
                 buttons[i].FontWeight = FontWeights.Normal;
                 BrushConverter bc = new BrushConverter();
                 buttons[i].Background = (Brush)bc.ConvertFrom("#FFDDDDDD");
+            }
+
+            if (computerOpponent)
+            {
+                player1Turn = !player1Turn; // The PC never starts
+                turnLbl.Content = player1Turn ? "You" : "PC"; // Whose turn is it?
+                AI();
+            }
+            else
+            {
+                player1Turn = !player1Turn; // Same player won't start
+                turnLbl.Content = player1Turn ? "Player 1" : "Player 2"; // Whose turn is it?
             }
         }
 
@@ -118,9 +122,10 @@ namespace TicTacToe
             else if (!computerOpponent)
                 newBtn.Content = "O";
 
-            player1Turn = !player1Turn;
+            newBtn.Background = Brushes.LightGreen;
+            player1Turn = !player1Turn; // Switch player
 
-            CheckWinner(buttons);
+            CheckWinner();
 
             if (computerOpponent) // Are we playing with AI? if so - run AI function
                 AI();
@@ -128,39 +133,51 @@ namespace TicTacToe
                 turnLbl.Content = player1Turn ? "Player 1" : "Player 2";
         }
 
-        // The event of the radio button being 'Checked'
-        // Fires up the AI and sets game settings accordingly
-        private void AIHandler(object sender, RoutedEventArgs e)
+        // Display message and set score etc.
+        private void WinnerMessage(int player1Win)
         {
-            computerOpponent = true; // Set bool
-            Start(); // Restart so we have an AI
-        }
+            string winner;
+            if (player1Win == 3)
+            {
+                Console.WriteLine("No winner, draw");
+                winner = "Nobody";
+                goto Message; // We skip the other stuff, no need to match variables etc.
+            }
 
-        private void WinnerMessage(bool player1Win)
-        {
-            // Who won?
-            scorePC += player1Turn ? 1 : 0;
-            scorePlayer += player1Turn ? 1 : 0;
+            // Did somebody win this turn?
+            scorePC += player1Win == 0 ? 0 : 1; // Should we add 1?
+            scorePlayer += player1Win == 1 ? 1 : 0; // Should we add 1?
+            score_p1.Text = scorePlayer.ToString(); // Change text
+            score_p2.Text = scorePC.ToString(); // Change text
 
-            string winner = player1Win ? "Player 1" : "Player 2";
+            if (computerOpponent)
+                winner = player1Win == 1 ? "Player 1" : "PC";
+            else
+                winner = player1Win == 1 ? "Player 1" : "Player 2";
+
+            Message: // "Jump point"
             MessageBoxResult result = MessageBox.Show($"{winner} won this round!\nStart new game?", "Game over!", MessageBoxButton.YesNo);
             if (result == MessageBoxResult.Yes)
+            {
                 Start();
+                return;
+            }
             else
                 Environment.Exit(0);
         }
 
-        private void CheckWinner(Button[] newButtons)
+        // Who's the winner?
+        private void CheckWinner()
         {
+            int calc = 0;
             for (int i = 0; i < 8; i++)
             {
                 int a = Solutions[i, 0],
                     b = Solutions[i, 1],
                     c = Solutions[i, 2];
-
-                Button bt1 = newButtons[a],
-                    bt2 = newButtons[b],
-                    bt3 = newButtons[c];
+                Button bt1 = buttons[a],
+                    bt2 = buttons[b],
+                    bt3 = buttons[c];
 
                 // If selections are "blank", continue function
                 if (bt1.Content.Equals("") || bt2.Content.Equals("") || bt3.Content.Equals(""))
@@ -170,16 +187,20 @@ namespace TicTacToe
                 if (bt1.Content == bt2.Content && bt2.Content == bt3.Content)
                 {
                     // Set all the buttons to red and make the text bold for easier distinguishing
-                    bt1.Background = Brushes.Red;
+                    bt1.Background = Brushes.OrangeRed;
                     bt1.FontWeight = FontWeights.Bold;
                     bt2.Background = Brushes.Red;
                     bt2.FontWeight = FontWeights.Bold;
-                    bt3.Background = Brushes.Red;
+                    bt3.Background = Brushes.DarkRed;
                     bt3.FontWeight = FontWeights.Bold;
-                    WinnerMessage(!player1Turn ? true : false);
+                    WinnerMessage(!player1Turn ? 0 : 1);
                     break;
                 }
+                else // Is every item occupied? - No winner, new round
+                    calc += !buttons[i].Content.Equals("") ? 1 : 0;
             }
+            if (calc == 8)
+                WinnerMessage(3);
         }
 
         // The AI brain
@@ -201,23 +222,34 @@ namespace TicTacToe
             //if (buttons[0].Content.Equals("X") & buttons[2].Content.Equals("X"))
             //    AISetButton(1);
 
-            for (int i = 0; i < 9; i++)
+            for (int i = 0; i < 8; i++)
             {
-                // Experimental AI
-                //if (i <= 6)
-                //{
-                //    bool same = Equals(buttons[i].Content.Equals("X"), buttons[i + 2].Content.Equals("X"));
-                //    if (same)
-                //    {
-                //        Console.WriteLine("Blocked");
-                //        AISetButton(i + 1);
-                //        return;
-                //    }
-                //}
-                /*else*/ if (buttons[i].Content.Equals(""))
+                int a = Solutions[i, 0],
+                    b = Solutions[i, 1],
+                    c = Solutions[i, 2];
+                Button bt1 = buttons[a],
+                    bt2 = buttons[b],
+                    bt3 = buttons[c];
+
+                if (bt1.Content.Equals("X") == bt3.Content.Equals("X") && bt2.Content.Equals(""))
+                {
+                    AISetButton(b);
+                    return;
+                }
+                if (bt1.Content.Equals("X") == bt2.Content.Equals("X") && bt3.Content.Equals(""))
+                {
+                    AISetButton(c);
+                    return;
+                }
+                if (bt2.Content.Equals("X") == bt3.Content.Equals("X") && bt1.Content.Equals(""))
+                {
+                    AISetButton(a);
+                    return;
+                }
+                else if (buttons[i].Content.Equals(""))
                 {
                     AISetButton(i);
-                    return; // break it
+                    return;
                 }
             }
         }
@@ -225,14 +257,31 @@ namespace TicTacToe
         // The button control for the AI
         private void AISetButton(int index)
         {
-            Console.WriteLine("AISetButton()");
-            if (index >= 0 && index <= 8 && buttons[index].Content.Equals("X"))
+            Console.WriteLine($"AISetButton({index})");
+            if (index >= 0 && index <= 8)
             {
                 buttons[index].Content = "O";
                 buttons[index].Focusable = false;
+                buttons[index].Background = Brushes.LightBlue;
             }
             player1Turn = true; // Players turn
             turnLbl.Content = "You";
+            CheckWinner();
+        }
+
+        // The event of the radio button being 'Checked'
+        // Fires up the AI and sets game settings accordingly
+        private void AIHandler(object sender, RoutedEventArgs e)
+        {
+            computerOpponent = true; // Set bool
+            Start(); // Restart so we have an AI
+        }
+
+        // Event for pressing the '2 Player' radiobutton
+        private void MultiplayerHandler(object sender, RoutedEventArgs e)
+        {
+            computerOpponent = false;
+            Start();
         }
     }
 }
