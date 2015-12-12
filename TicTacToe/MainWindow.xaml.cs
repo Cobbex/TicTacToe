@@ -193,7 +193,7 @@ namespace TicTacToe
                     bt2.FontWeight = FontWeights.Bold;
                     bt3.Background = Brushes.DarkRed;
                     bt3.FontWeight = FontWeights.Bold;
-                    WinnerMessage(!player1Turn ? 0 : 1);
+                    WinnerMessage(!player1Turn ? 1 : 0);
                     break;
                 }
                 else // Is every item occupied? - No winner, new round
