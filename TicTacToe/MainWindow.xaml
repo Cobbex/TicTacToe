@@ -5,34 +5,34 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TicTacToe"
         mc:Ignorable="d"
-        Title="MainWindow" Height="361" Width="338">
+        Title="Tic-Tac-Toe" Height="361" Width="438" ResizeMode="NoResize" FontFamily="Open Sans">
     <Grid>
-        <Border x:Name="_1" BorderThickness="1" BorderBrush="Black" Width="100" Height="100" Margin="10,10,220,220">
-            <Image x:Name="image" Margin="0"/>
-        </Border>
-        <Border x:Name="_2" BorderThickness="1" BorderBrush="Black" Width="100" Height="100" Margin="115,10,115,220">
-            <Image x:Name="image1" Margin="0"/>
-        </Border>
-        <Border x:Name="_3" BorderThickness="1" BorderBrush="Black" Width="100" Height="100" Margin="220,10,10,220">
-            <Image x:Name="image2" Margin="0"/>
-        </Border>
-        <Border x:Name="_4" BorderThickness="1" BorderBrush="Black" Width="100" Height="100" Margin="10,115,220,115">
-            <Image x:Name="image3" Margin="0"/>
-        </Border>
-        <Border x:Name="_5" BorderThickness="1" BorderBrush="Black" Width="100" Height="100" Margin="115">
-            <Image x:Name="image4" Margin="0"/>
-        </Border>
-        <Border x:Name="_6" BorderThickness="1" BorderBrush="Black" Width="100" Height="100" Margin="220,115,10,115">
-            <Image x:Name="image5" Margin="0"/>
-        </Border>
-        <Border x:Name="_7" BorderThickness="1" BorderBrush="Black" Width="100" Height="100" Margin="10,220,220,10">
-            <Image x:Name="image6" Margin="0"/>
-        </Border>
-        <Border x:Name="_8" BorderThickness="1" BorderBrush="Black" Width="100" Height="100" Margin="115,220,115,10">
-            <Image x:Name="image7" Margin="0"/>
-        </Border>
-        <Border x:Name="_9" BorderThickness="1" BorderBrush="Black" Width="100" Height="100" Margin="220,220,10,10">
-            <Image x:Name="image8" Margin="0"/>
-        </Border>
+        <Button x:Name="_1" Margin="10,10,322,222" HorizontalAlignment="Center" VerticalAlignment="Center" Width="100" Height="100" Click="Click" Content="" FontSize="64"/>
+        <Button x:Name="_2" Margin="115,10,217,222" Width="100" Height="100" HorizontalAlignment="Center" VerticalAlignment="Center" Click="Click" Content="" FontSize="64"/>
+        <Button x:Name="_3" Margin="220,10,112,222" Width="100" Height="100" HorizontalAlignment="Center" VerticalAlignment="Center" Click="Click" Content="" FontSize="64"/>
+        <Button x:Name="_4" Margin="10,115,322,117" Width="100" Height="100" HorizontalAlignment="Center" VerticalAlignment="Center" Click="Click" Content="" FontSize="64"/>
+        <Button x:Name="_5" Margin="115,115,217,117" Width="100" Height="100" HorizontalAlignment="Center" VerticalAlignment="Center" Click="Click" Content="" FontSize="64"/>
+        <Button x:Name="_6" Margin="220,115,112,117" Width="100" Height="100" HorizontalAlignment="Center" VerticalAlignment="Center" Click="Click" Content="" FontSize="64"/>
+        <Button x:Name="_7" Margin="10,220,322,12" Width="100" Height="100" HorizontalAlignment="Center" VerticalAlignment="Center" Click="Click" Content="" FontSize="64"/>
+        <Button x:Name="_8" Margin="115,220,217,12" Width="100" Height="100" HorizontalAlignment="Center" VerticalAlignment="Center" Click="Click" Content="" FontSize="64"/>
+        <Button x:Name="_9" Margin="220,220,112,12" Width="100" Height="100" HorizontalAlignment="Center" VerticalAlignment="Center" Click="Click" Content="" FontSize="64"/>
+        <Label x:Name="label" Content="Turn" Margin="0,10,10,0" Width="97" HorizontalAlignment="Right" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="21.333" BorderThickness="0,0,0,3" Background="Transparent">
+            <Label.BorderBrush>
+                <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.HighlightColorKey}}"/>
+            </Label.BorderBrush>
+        </Label>
+        <Label x:Name="turnLbl" Content="X" Margin="0,52,10,0" VerticalAlignment="Top" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" BorderBrush="Black" BorderThickness="0" HorizontalAlignment="Right" Width="97" FontSize="21.333" FontWeight="Bold"/>
+        <Label x:Name="label2" Content="Score" Margin="0,85,10,0" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="16" BorderThickness="0,0,0,3" BorderBrush="Black" HorizontalAlignment="Right" Width="97"/>
+        <Label x:Name="label3" Content="PC" HorizontalAlignment="Right" Margin="0,125,69,0" VerticalAlignment="Top" FontSize="16" Width="38" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <Label x:Name="label3_Copy" Content="You" HorizontalAlignment="Right" Margin="0,162,69,0" VerticalAlignment="Top" FontSize="16" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+        <TextBox x:Name="textBox" Height="32" Margin="368,125,10,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16" IsTabStop="False" IsHitTestVisible="False" Focusable="False" AllowDrop="False"/>
+        <TextBox x:Name="textBox_Copy" Height="32" Margin="368,162,10,0" TextWrapping="Wrap" Text="0" VerticalAlignment="Top" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="16" IsTabStop="False" IsHitTestVisible="False" Focusable="False" AllowDrop="False"/>
+        <Label x:Name="label2_Copy" Content="Settings" Margin="0,199,10,0" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="16" BorderThickness="0,0,0,3" HorizontalAlignment="Right" Width="97">
+            <Label.BorderBrush>
+                <SolidColorBrush Color="{DynamicResource {x:Static SystemColors.MenuHighlightColorKey}}"/>
+            </Label.BorderBrush>
+        </Label>
+        <RadioButton x:Name="radioButton" Content="You vs PC" Margin="0,239,10,0" VerticalAlignment="Top" FontSize="16" HorizontalAlignment="Right" Width="97" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <RadioButton x:Name="radioButton_Copy" Content="2 players" Margin="0,265,10,0" VerticalAlignment="Top" FontSize="16" HorizontalAlignment="Right" Width="97" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
     </Grid>
 </Window>
