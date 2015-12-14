@@ -92,17 +92,17 @@ namespace TicTacToe
                 buttons[i].Background = (Brush)bc.ConvertFrom("#FFDDDDDD");
             }
 
+            Random rnd = new Random(); // New random generator
+            int startDraw = rnd.Next(0, 3); // Assign random value to variable
+            player1Turn = startDraw > 1 ? true : false; // Make decision based of randomized value
+
             if (computerOpponent)
             {
-                player1Turn = !player1Turn; // The PC never starts
                 turnLbl.Content = player1Turn ? "You" : "PC"; // Whose turn is it?
                 AI();
             }
             else
-            {
-                player1Turn = !player1Turn; // Same player won't start
                 turnLbl.Content = player1Turn ? "Player 1" : "Player 2"; // Whose turn is it?
-            }
         }
 
         // Handeling all the buttons in one function!
@@ -151,7 +151,7 @@ namespace TicTacToe
             score_p2.Text = scorePC.ToString(); // Change text
 
             if (computerOpponent)
-                winner = player1Win == 1 ? "Player 1" : "PC";
+                winner = player1Win == 1 ? "You" : "PC";
             else
                 winner = player1Win == 1 ? "Player 1" : "Player 2";
 
@@ -239,6 +239,17 @@ namespace TicTacToe
                 return;
             }
 
+            if (buttons[6].Content.Equals("") && buttons[4].Content.Equals("X") && buttons[2].Content.Equals("X"))
+            {
+                AISetButton(6);
+                return;
+            }
+            else if (buttons[6].Content.Equals("X") && buttons[4].Content.Equals("X") && buttons[2].Content.Equals(""))
+            {
+                AISetButton(2);
+                return;
+            }
+
             // Basic AI for winning moves
             for (int i = 0; i < 8; i++)
             {
@@ -265,6 +276,17 @@ namespace TicTacToe
                     return;
                 }
                 else if (buttons[i].Content.Equals(""))
+                {
+                    AISetButton(i);
+                    return;
+                }
+            }
+
+            // If AI has last move and cannot make decide, first empty
+            // We will only get to this part of the code if all the other executions failed
+            for (int i = 0; i < 8; i++)
+            {
+                if (buttons[i].Content.Equals(""))
                 {
                     AISetButton(i);
                     return;
