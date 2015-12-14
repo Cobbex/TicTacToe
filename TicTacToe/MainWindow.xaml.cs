@@ -222,6 +222,24 @@ namespace TicTacToe
             //if (buttons[0].Content.Equals("X") & buttons[2].Content.Equals("X"))
             //    AISetButton(1);
 
+            // AI for defensive decision making
+            if (buttons[2].Content.Equals("X") && buttons[4].Content.Equals("") && buttons[6].Content.Equals("X") || (buttons[0].Content.Equals("X") && buttons[4].Content.Equals("") && buttons[8].Content.Equals("X")))
+            {
+                AISetButton(4);
+                return;
+            }
+            else if (buttons[0].Content.Equals("") && buttons[4].Content.Equals("X") && buttons[8].Content.Equals("X"))
+            {
+                AISetButton(0);
+                return;
+            }
+            else if (buttons[0].Content.Equals("X") && buttons[4].Content.Equals("X") && buttons[8].Content.Equals(""))
+            {
+                AISetButton(8);
+                return;
+            }
+
+            // Basic AI for winning moves
             for (int i = 0; i < 8; i++)
             {
                 int a = Solutions[i, 0],
